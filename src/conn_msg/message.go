@@ -15,7 +15,7 @@ type MessageContent struct {
 }
 
 type Message interface {
-	HandleMessage(conn connect.Connection) error
+	HandleMessage(conn *connect.Connection) error
 }
 
 var MessageMap map[string]interface{}
@@ -25,6 +25,7 @@ var MessageTypeIdMap map[reflect.Type]MessageId
 func init() {
 	MessageMap = make(map[string]interface{})
 	MessageMap["PING"] = PingMessage{}
+	MessageMap["PONG"] = PongMessage{}
 	MessageMap["STRI"] = StringMessage{}
 
 	MessageIdTypeMap = make(map[MessageId]reflect.Type)

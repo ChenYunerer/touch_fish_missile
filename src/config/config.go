@@ -8,6 +8,7 @@ type Config struct {
 	Port         string
 	WriteTimeout time.Duration
 	ReadTimeout  time.Duration
+	RetryTimes   uint32
 	PingDuration time.Duration
 }
 
@@ -20,6 +21,7 @@ func initConfig() {
 		Port:         "8888",
 		WriteTimeout: time.Duration(5) * time.Second,
 		ReadTimeout:  time.Duration(5) * time.Second,
+		RetryTimes:   3,
 		PingDuration: time.Duration(2) * time.Second,
 	}
 }

@@ -71,13 +71,27 @@ func handleConn(conn net.Conn) {
 }
 
 func readLoop(conn *connect.Connection) {
+	conf := config.GetInstance()
 	bytes := make([]byte, 1024)
 	for {
+		if conf.ReadTimeout.Seconds() != 0 {
+			deadline := time.Now().Add(conf.WriteTimeout)
+			err := conn.Conn.SetReadDeadline(deadline)
+			if err != nil {
+				log.Error(err)
+			}
+		}
 		reader := bufio.NewReader(conn.Conn)
 		n, err := reader.Read(bytes)
 		if err != nil {
 			log.Error(err)
-			return
+			conn.AddRetryTimes()
+			connRetryTimes := conn.GetRetryTimes()
+			log.Info("conn ", conn.RemoteAddress, " retry times is ", connRetryTimes)
+			if connRetryTimes >= conf.RetryTimes {
+				return
+			}
+			continue
 		}
 		if n == 0 {
 			log.Error("no data read from reader")
@@ -89,8 +103,10 @@ func readLoop(conn *connect.Connection) {
 			continue
 		}
 		log.Info("receive conn_msg from client ", message)
-		message.HandleMessage(*conn)
-		//connect.GetConnectionPoolInstant().SendToOthers(*conn, bytes)
+		err = message.HandleMessage(conn)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
 
@@ -98,13 +114,29 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 	conf := config.GetInstance()
 	pingTimer := time.NewTicker(conf.PingDuration)
 	for {
+		if conf.WriteTimeout.Seconds() != 0 {
+			deadline := time.Now().Add(conf.WriteTimeout)
+			err := conn.Conn.SetWriteDeadline(deadline)
+			if err != nil {
+				log.Error(err)
+			}
+		}
 		select {
 		case messageBytes := <-conn.SendMessageChan:
 			log.Info("send conn_msg to ", conn.RemoteAddress)
 			n, err := conn.Conn.Write(messageBytes)
 			if err != nil {
 				log.Error(err)
-				return
+				conn.AddRetryTimes()
+				connRetryTimes := conn.GetRetryTimes()
+				log.Info("conn ", conn.RemoteAddress, " retry times is ", connRetryTimes)
+				if connRetryTimes >= conf.RetryTimes {
+					return
+				}
+				continue
+			} else {
+				//发送消息不重制RetryTimes
+				//conn.ResetRetryTimes()
 			}
 			if n == 0 {
 				log.Error("send data error")

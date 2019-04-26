@@ -11,7 +11,7 @@ type StringMessage struct {
 	Message string
 }
 
-func (msg *StringMessage) HandleMessage(conn connect.Connection) error {
+func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
 	messageJsonBytes, err := json.Marshal(msg)
 	if err != nil {
 		log.Error(err)
