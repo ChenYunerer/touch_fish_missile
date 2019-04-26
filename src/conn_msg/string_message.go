@@ -4,7 +4,7 @@ import (
 	"chat_group/src/connect"
 	"chat_group/src/datebase"
 	"chat_group/src/serialization"
-	"errors"
+	"github.com/prometheus/common/log"
 	"reflect"
 	"time"
 )
@@ -24,12 +24,14 @@ func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
 	}
 	//广播消息
 	connect.GetConnectionPoolInstant().SendToOthers(*conn, stringMessageBytes)
-	//记录消息
-	chatRecordDO := datebase.NewChatRecordDO(msg.Token, conn.RemoteAddress, msg.Message, time.Now())
-	insertSuccess := chatRecordDO.Insert()
-	if !insertSuccess {
-		return errors.New("insert chat record fail")
-	}
+	datebase.DO(func() {
+		//记录消息
+		chatRecordDO := datebase.NewChatRecordDO(msg.Token, conn.RemoteAddress, msg.Message, time.Now())
+		insertSuccess := chatRecordDO.Insert()
+		if !insertSuccess {
+			log.Error("insert chat record fail")
+		}
+	})
 	return nil
 }
 
