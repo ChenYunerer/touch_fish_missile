@@ -6,8 +6,8 @@ type PingMessage struct {
 	Content MessageContent
 }
 
-func (msg *PingMessage) handleMessage(conn connect.Connection) {
-
+func (msg *PingMessage) HandleMessage(conn connect.Connection) error {
+	return nil
 }
 
 func NewPingMessage() PingMessage {

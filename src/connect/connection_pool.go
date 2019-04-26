@@ -35,8 +35,8 @@ func (connPool *ConnectionPool) RemoveConnection(conn *Connection) {
 	delete(connPool.Connections, conn.RemoteAddress)
 }
 
-func (connPool *ConnectionPool) SendToOthers(me *Connection, message []byte)  {
-	for remountAddress, conn := range connPool.Connections{
+func (connPool *ConnectionPool) SendToOthers(me Connection, message []byte) {
+	for remountAddress, conn := range connPool.Connections {
 		if remountAddress != me.RemoteAddress {
 			conn.SendMessageChan <- message
 		}

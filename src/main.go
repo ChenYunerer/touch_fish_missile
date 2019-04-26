@@ -5,16 +5,14 @@ import (
 	"chat_group/src/config"
 	"chat_group/src/conn_msg"
 	"chat_group/src/connect"
-	"encoding/json"
+	"chat_group/src/serialization"
 	log "github.com/sirupsen/logrus"
 	"net"
 	"os"
 	"os/signal"
-	"reflect"
 	"sync"
 	"time"
 )
-
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{
@@ -73,11 +71,6 @@ func handleConn(conn net.Conn) {
 }
 
 func readLoop(conn *connect.Connection) {
-	type BaseMessage  struct {
-		Content struct{
-			MessageType string
-		}
-	}
 	bytes := make([]byte, 1024)
 	for {
 		reader := bufio.NewReader(conn.Conn)
@@ -90,20 +83,14 @@ func readLoop(conn *connect.Connection) {
 			log.Error("no data read from reader")
 			return
 		}
-		connect.GetConnectionPoolInstant().SendToOthers(conn, bytes)
-		baseMessage := &BaseMessage{}
-		err = json.Unmarshal(bytes[:n], baseMessage)
+		message, err := serialization.DecodeMessage(bytes)
 		if err != nil {
-			log.Error(err)
+			log.Info(err)
+			continue
 		}
-		log.Info("receive conn_msg from client ", baseMessage)
-		messageType := conn_msg.MessageContentMap[baseMessage.Content.MessageType]
-		message := reflect.New(messageType)
-		err = json.Unmarshal(bytes[:n], message)
-		if err != nil {
-			log.Error(err)
-		}
-
+		log.Info("receive conn_msg from client ", message)
+		message.HandleMessage(*conn)
+		//connect.GetConnectionPoolInstant().SendToOthers(*conn, bytes)
 	}
 }
 
@@ -112,10 +99,9 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 	pingTimer := time.NewTicker(conf.PingDuration)
 	for {
 		select {
-		case messageJsonBytes := <-conn.SendMessageChan:
-			messageJsonStr := string(messageJsonBytes)
-			log.Info("send conn_msg to ", conn.RemoteAddress, " conn_msg : "+messageJsonStr)
-			n, err := conn.Conn.Write(messageJsonBytes)
+		case messageBytes := <-conn.SendMessageChan:
+			log.Info("send conn_msg to ", conn.RemoteAddress)
+			n, err := conn.Conn.Write(messageBytes)
 			if err != nil {
 				log.Error(err)
 				return
@@ -126,11 +112,12 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 			}
 		case <-pingTimer.C:
 			pingMessage := conn_msg.NewPingMessage()
-			messageJsonBytes, err := json.Marshal(pingMessage)
+			bytes, err := serialization.EncodeMessage(&pingMessage)
 			if err != nil {
 				log.Error(err)
+				continue
 			}
-			conn.SendMessageChan <- messageJsonBytes
+			conn.SendMessageChan <- bytes
 		case <-quit:
 			return
 		}
