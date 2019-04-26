@@ -10,6 +10,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"reflect"
 	"sync"
 	"time"
 )
@@ -97,7 +98,10 @@ func readLoop(conn *connect.Connection) {
 			log.Error("no data read from reader")
 			return
 		}
-		message, err := serialization.DecodeMessage(bytes)
+		messageId := conn_msg.GetMessageIdFromMessageBytes(bytes)
+		messageType := conn_msg.GetMessageTypeByMessageId(messageId)
+		messageInterface, err := serialization.DecodeMessage(messageType, bytes, conn_msg.LenOfMessageID)
+		message := messageInterface.(conn_msg.Message)
 		if err != nil {
 			log.Info(err)
 			continue
@@ -144,7 +148,9 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 			}
 		case <-pingTimer.C:
 			pingMessage := conn_msg.NewPingMessage()
-			bytes, err := serialization.EncodeMessage(&pingMessage)
+			t := reflect.TypeOf(pingMessage)
+			messageId := conn_msg.MessageTypeIdMap[t]
+			bytes, err := serialization.EncodeMessage(&pingMessage, messageId[:])
 			if err != nil {
 				log.Error(err)
 				continue

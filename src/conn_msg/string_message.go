@@ -2,8 +2,8 @@ package conn_msg
 
 import (
 	"chat_group/src/connect"
-	"encoding/json"
-	log "github.com/sirupsen/logrus"
+	"chat_group/src/serialization"
+	"reflect"
 )
 
 type StringMessage struct {
@@ -12,11 +12,13 @@ type StringMessage struct {
 }
 
 func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
-	messageJsonBytes, err := json.Marshal(msg)
+	t := reflect.TypeOf(msg).Elem()
+	messageId := MessageTypeIdMap[t]
+	stringMessageBytes, err := serialization.EncodeMessage(msg, messageId[:])
 	if err != nil {
-		log.Error(err)
+		return err
 	}
-	connect.GetConnectionPoolInstant().SendToOthers(conn, messageJsonBytes)
+	connect.GetConnectionPoolInstant().SendToOthers(*conn, stringMessageBytes)
 	return nil
 }
 

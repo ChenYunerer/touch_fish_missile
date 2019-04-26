@@ -2,14 +2,10 @@ package serialization
 
 import (
 	"bytes"
-	"chat_group/src/conn_msg"
 	"encoding/gob"
-	"reflect"
 )
 
-func EncodeMessage(message conn_msg.Message) ([]byte, error) {
-	t := reflect.TypeOf(message).Elem()
-	messageId := conn_msg.MessageTypeIdMap[t]
+func EncodeMessage(message interface{}, messageId []byte) ([]byte, error) {
 	messageContentBytes, err := encode(message)
 	if err != nil {
 		return nil, err

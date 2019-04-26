@@ -7,12 +7,12 @@ import (
 
 func TestSerialization(t *testing.T) {
 	stringMessage := conn_msg.NewStringMessage("123")
-	bytes, err := EncodeMessage(&stringMessage)
+	bytes, err := conn_msg.EncodeMessage(&stringMessage)
 	if err != nil {
 		print(err)
 		return
 	}
-	message, err := DecodeMessage(bytes)
+	message, err := conn_msg.DecodeMessage(bytes)
 	if err != nil {
 		print(err)
 		return

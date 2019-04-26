@@ -1,6 +1,8 @@
 package connect
 
-import "sync"
+import (
+	"sync"
+)
 
 type ConnectionPool struct {
 	Connections map[string]*Connection

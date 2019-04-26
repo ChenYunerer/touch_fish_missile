@@ -3,6 +3,7 @@ package conn_msg
 import (
 	"chat_group/src/connect"
 	"chat_group/src/serialization"
+	"reflect"
 )
 
 type PingMessage struct {
@@ -11,7 +12,9 @@ type PingMessage struct {
 
 func (msg *PingMessage) HandleMessage(conn *connect.Connection) error {
 	pongMessage := NewPongMessage()
-	pongMessageBytes, err := serialization.EncodeMessage(&pongMessage)
+	t := reflect.TypeOf(msg).Elem()
+	messageId := MessageTypeIdMap[t]
+	pongMessageBytes, err := serialization.EncodeMessage(&pongMessage, messageId[:])
 	if err != nil {
 		return err
 	}

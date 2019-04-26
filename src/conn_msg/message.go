@@ -52,3 +52,20 @@ func messageIdFromString(messageIdStr string) MessageId {
 	}
 	return messageId
 }
+
+func GetMessageIdFromMessageBytes(messageBytes []byte) MessageId {
+	messageId := MessageId{}
+	if len(messageBytes) <= LenOfMessageID {
+		log.Error("message too short")
+		return messageId
+	}
+	messageIdBytes := messageBytes[:LenOfMessageID]
+	for i, v := range messageIdBytes {
+		messageId[i] = v
+	}
+	return messageId
+}
+
+func GetMessageTypeByMessageId(messageId MessageId) reflect.Type {
+	return MessageIdTypeMap[messageId]
+}
