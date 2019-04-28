@@ -41,7 +41,6 @@ func handleConn(conn net.Conn) {
 	connection := connect.NewConnection(conn)
 	connPool := connect.GetConnectionPoolInstant()
 	connPool.AddConnection(connection)
-	defer connection.Conn.Close()
 	defer connPool.RemoveConnection(connection)
 	log.Info("handle conn address is ", connection.RemoteAddress)
 	quit := make(chan struct{})
@@ -170,7 +169,11 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 			}
 		}
 		select {
-		case messageBytes := <-conn.SendMessageChan:
+		case messageBytes, closed := <-conn.SendMessageChan:
+			if closed {
+				log.Info("closed")
+				//return
+			}
 			log.Info("send conn_msg to ", conn.RemoteAddress)
 			n, err := conn.Conn.Write(messageBytes)
 			if err != nil {

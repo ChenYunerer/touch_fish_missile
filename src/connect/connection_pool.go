@@ -5,15 +5,15 @@ import (
 )
 
 type ConnectionPool struct {
-	Connections map[string]*Connection
-	sync.Mutex
+	connections map[string]*Connection
+	sync.RWMutex
 }
 
 var connectionPool *ConnectionPool
 
 func initConnectionPool() *ConnectionPool {
 	connectionPool = &ConnectionPool{
-		Connections: map[string]*Connection{},
+		connections: map[string]*Connection{},
 	}
 	return connectionPool
 }
@@ -26,21 +26,24 @@ func GetConnectionPoolInstant() *ConnectionPool {
 }
 
 func (connPool *ConnectionPool) AddConnection(conn *Connection) {
-	connPool.Mutex.Lock()
-	defer connPool.Mutex.Unlock()
-	connPool.Connections[conn.RemoteAddress] = conn
+	connPool.RWMutex.Lock()
+	defer connPool.RWMutex.Unlock()
+	connPool.connections[conn.RemoteAddress] = conn
 }
 
 func (connPool *ConnectionPool) RemoveConnection(conn *Connection) {
-	connPool.Mutex.Lock()
-	defer connPool.Mutex.Unlock()
+	connPool.RWMutex.Lock()
+	defer connPool.RWMutex.Unlock()
 	conn.Close()
-	delete(connPool.Connections, conn.RemoteAddress)
+	delete(connPool.connections, conn.RemoteAddress)
 }
 
 func (connPool *ConnectionPool) SendToOthers(me Connection, message []byte) {
-	for remountAddress, conn := range connPool.Connections {
+	connPool.RWMutex.RLock()
+	defer connPool.RWMutex.RUnlock()
+	for remountAddress, conn := range connPool.connections {
 		if remountAddress != me.RemoteAddress {
+			//conn.SendMessageChan.c
 			conn.SendMessageChan <- message
 		}
 	}

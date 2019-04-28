@@ -12,7 +12,7 @@ type PingMessage struct {
 
 func (msg *PingMessage) HandleMessage(conn *connect.Connection) error {
 	pongMessage := NewPongMessage()
-	t := reflect.TypeOf(msg).Elem()
+	t := reflect.TypeOf(pongMessage)
 	messageId := MessageTypeIdMap[t]
 	pongMessageBytes, err := serialization.EncodeMessage(&pongMessage, messageId[:])
 	if err != nil {

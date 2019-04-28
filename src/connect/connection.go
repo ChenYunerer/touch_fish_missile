@@ -2,6 +2,7 @@ package connect
 
 import (
 	"bytes"
+	"github.com/prometheus/common/log"
 	"net"
 	"sync"
 )
@@ -50,5 +51,9 @@ func (conn *Connection) AddRetryTimes() {
 
 func (conn *Connection) Close() {
 	conn.Buffer = &bytes.Buffer{}
-	conn.Conn.Close()
+	close(conn.SendMessageChan)
+	err := conn.Conn.Close()
+	if err != nil {
+		log.Error(err)
+	}
 }
