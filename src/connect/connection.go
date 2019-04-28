@@ -1,6 +1,7 @@
 package connect
 
 import (
+	"bytes"
 	"net"
 	"sync"
 )
@@ -12,6 +13,7 @@ type Connection struct {
 	Conn            net.Conn
 	SendMessageChan chan []byte
 	RetryTimes      uint32
+	Buffer          *bytes.Buffer
 	sync.RWMutex
 }
 
@@ -21,6 +23,7 @@ func NewConnection(conn net.Conn) *Connection {
 		Conn:            conn,
 		SendMessageChan: make(chan []byte, SendMessageChanBuffer),
 		RetryTimes:      0,
+		Buffer:          &bytes.Buffer{},
 	}
 }
 
@@ -43,4 +46,9 @@ func (conn *Connection) AddRetryTimes() {
 	conn.Lock()
 	defer conn.Unlock()
 	conn.RetryTimes++
+}
+
+func (conn *Connection) Close() {
+	conn.Buffer = &bytes.Buffer{}
+	conn.Conn.Close()
 }

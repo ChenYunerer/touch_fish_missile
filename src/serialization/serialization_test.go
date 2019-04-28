@@ -1,21 +1,20 @@
 package serialization
 
 import (
-	"chat_group/src/conn_msg"
+	"bytes"
 	"testing"
 )
 
 func TestSerialization(t *testing.T) {
-	stringMessage := conn_msg.NewStringMessage("123")
-	bytes, err := conn_msg.EncodeMessage(&stringMessage)
-	if err != nil {
-		print(err)
-		return
-	}
-	message, err := conn_msg.DecodeMessage(bytes)
-	if err != nil {
-		print(err)
-		return
-	}
-	print(message)
+	b := make([]byte, 0)
+	b = append(b, []byte("123456789098756123456789098756123456789098756123456789098756123456789098756")...)
+	buf := &bytes.Buffer{}
+	buf.Write(b)
+
+	c := make([]byte, 2)
+	buf.Read(c)
+	println(c)
+	buf.Next(2)
+	buf.Read(c)
+	println(c)
 }

@@ -34,6 +34,7 @@ func (connPool *ConnectionPool) AddConnection(conn *Connection) {
 func (connPool *ConnectionPool) RemoveConnection(conn *Connection) {
 	connPool.Mutex.Lock()
 	defer connPool.Mutex.Unlock()
+	conn.Close()
 	delete(connPool.Connections, conn.RemoteAddress)
 }
 

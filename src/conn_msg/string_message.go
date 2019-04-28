@@ -1,6 +1,7 @@
 package conn_msg
 
 import (
+	"chat_group/src/config"
 	"chat_group/src/connect"
 	"chat_group/src/datebase"
 	"chat_group/src/serialization"
@@ -24,20 +25,22 @@ func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
 	}
 	//广播消息
 	connect.GetConnectionPoolInstant().SendToOthers(*conn, stringMessageBytes)
-	datebase.DO(func() {
-		//记录消息
-		chatRecordDO := datebase.NewChatRecordDO(msg.Token, conn.RemoteAddress, msg.Message, time.Now())
-		insertSuccess := chatRecordDO.Insert()
-		if !insertSuccess {
-			log.Error("insert chat record fail")
-		}
-	})
+	if config.GetInstance().SaveChatRecord {
+		datebase.DO(func() {
+			//记录消息
+			chatRecordDO := datebase.NewChatRecordDO(msg.Token, conn.RemoteAddress, msg.Message, time.Now())
+			insertSuccess := chatRecordDO.Insert()
+			if !insertSuccess {
+				log.Error("insert chat record fail")
+			}
+		})
+	}
 	return nil
 }
 
-func NewStringMessage(message string) StringMessage {
+func NewStringMessage(token, message string) StringMessage {
 	return StringMessage{
-		Token:   "614482989",
+		Token:   token,
 		Content: MessageContent{MessageType: "STRING"},
 		Message: message,
 	}
