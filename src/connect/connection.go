@@ -2,12 +2,12 @@ package connect
 
 import (
 	"bytes"
-	"github.com/prometheus/common/log"
+	log "github.com/sirupsen/logrus"
 	"net"
 	"sync"
 )
 
-const SendMessageChanBuffer = 32
+const SendMessageChanBuffer = 64
 
 type Connection struct {
 	RemoteAddress   string
@@ -51,9 +51,9 @@ func (conn *Connection) AddRetryTimes() {
 
 func (conn *Connection) Close() {
 	conn.Buffer = &bytes.Buffer{}
-	close(conn.SendMessageChan)
 	err := conn.Conn.Close()
 	if err != nil {
 		log.Error(err)
 	}
+	log.Info("conn ", conn.RemoteAddress, " 结束")
 }

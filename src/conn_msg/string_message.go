@@ -24,7 +24,8 @@ func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
 		return err
 	}
 	//广播消息
-	connect.GetConnectionPoolInstant().SendToOthers(*conn, stringMessageBytes)
+	sendToOtherChanObject := connect.NewSendToOtherChanObject(stringMessageBytes, conn)
+	connect.GetConnectionPoolInstant().PrepareSendToOther(sendToOtherChanObject)
 	if config.GetInstance().SaveChatRecord {
 		datebase.DO(func() {
 			//记录消息

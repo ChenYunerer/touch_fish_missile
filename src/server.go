@@ -25,34 +25,36 @@ func listenerConn() {
 	if err != nil {
 		log.Error(err)
 	}
-	log.Info("listen start")
+	log.Info("Listen Start")
 	defer listener.Close()
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Error(err)
+			log.Error("Accept Conn Error: ", err)
 		}
-		log.Info("accept a conn")
+		log.Info("Accept A Conn, Address Is: ", conn.RemoteAddr().String())
 		go handleConn(conn)
 	}
 }
 
 func handleConn(conn net.Conn) {
+	defer log.Info("handleConn 结束")
 	connection := connect.NewConnection(conn)
 	connPool := connect.GetConnectionPoolInstant()
 	connPool.AddConnection(connection)
 	defer connPool.RemoveConnection(connection)
-	log.Info("handle conn address is ", connection.RemoteAddress)
 	quit := make(chan struct{})
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
+		defer log.Info("read loop 结束")
 		defer wg.Done()
 		defer close(quit)
 		readLoop(connection)
 	}()
 	wg.Add(1)
 	go func() {
+		defer log.Info("write loop 结束")
 		defer wg.Done()
 		writeLoop(connection, quit)
 	}()
@@ -76,7 +78,7 @@ func readLoop(conn *connect.Connection) {
 			log.Error(err)
 			conn.AddRetryTimes()
 			connRetryTimes := conn.GetRetryTimes()
-			log.Info("conn ", conn.RemoteAddress, " retry times is ", connRetryTimes)
+			log.Info("Read conn ", conn.RemoteAddress, " retry times is ", connRetryTimes)
 			if connRetryTimes >= conf.RetryTimes {
 				return
 			}
@@ -107,6 +109,55 @@ func readLoop(conn *connect.Connection) {
 			if err != nil {
 				log.Error(err)
 			}
+		}
+	}
+}
+
+func writeLoop(conn *connect.Connection, quit chan struct{}) {
+	conf := config.GetInstance()
+	pingTimer := time.NewTicker(conf.PingDuration)
+	for {
+		if conf.WriteTimeout.Seconds() != 0 {
+			deadline := time.Now().Add(conf.WriteTimeout)
+			err := conn.Conn.SetWriteDeadline(deadline)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+		select {
+		case messageBytes, ok := <-conn.SendMessageChan:
+			if !ok {
+				log.Info("SendMessageChan Closed")
+				return
+			}
+			log.Info("Send Message To ", conn.RemoteAddress)
+			n, err := conn.Conn.Write(messageBytes)
+			if err != nil {
+				log.Error(err)
+				conn.AddRetryTimes()
+				connRetryTimes := conn.GetRetryTimes()
+				log.Info("Write Conn ", conn.RemoteAddress, " Retry Times Is ", connRetryTimes)
+				if connRetryTimes >= conf.RetryTimes {
+					return
+				}
+				continue
+			}
+			if n == 0 {
+				log.Error("Send Data Error")
+				return
+			}
+		case <-pingTimer.C:
+			pingMessage := conn_msg.NewPingMessage()
+			t := reflect.TypeOf(pingMessage)
+			messageId := conn_msg.MessageTypeIdMap[t]
+			bytes, err := serialization.EncodeMessage(&pingMessage, messageId[:])
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+			conn.SendMessageChan <- bytes
+		case <-quit:
+			return
 		}
 	}
 }
@@ -155,53 +206,4 @@ func decodeMessage(bytess [][]byte) ([]conn_msg.Message, error) {
 		messages = append(messages, message)
 	}
 	return messages, nil
-}
-
-func writeLoop(conn *connect.Connection, quit chan struct{}) {
-	conf := config.GetInstance()
-	pingTimer := time.NewTicker(conf.PingDuration)
-	for {
-		if conf.WriteTimeout.Seconds() != 0 {
-			deadline := time.Now().Add(conf.WriteTimeout)
-			err := conn.Conn.SetWriteDeadline(deadline)
-			if err != nil {
-				log.Error(err)
-			}
-		}
-		select {
-		case messageBytes, closed := <-conn.SendMessageChan:
-			if closed {
-				log.Info("closed")
-				//return
-			}
-			log.Info("send conn_msg to ", conn.RemoteAddress)
-			n, err := conn.Conn.Write(messageBytes)
-			if err != nil {
-				log.Error(err)
-				conn.AddRetryTimes()
-				connRetryTimes := conn.GetRetryTimes()
-				log.Info("conn ", conn.RemoteAddress, " retry times is ", connRetryTimes)
-				if connRetryTimes >= conf.RetryTimes {
-					return
-				}
-				continue
-			}
-			if n == 0 {
-				log.Error("send data error")
-				return
-			}
-		case <-pingTimer.C:
-			pingMessage := conn_msg.NewPingMessage()
-			t := reflect.TypeOf(pingMessage)
-			messageId := conn_msg.MessageTypeIdMap[t]
-			bytes, err := serialization.EncodeMessage(&pingMessage, messageId[:])
-			if err != nil {
-				log.Error(err)
-				continue
-			}
-			conn.SendMessageChan <- bytes
-		case <-quit:
-			return
-		}
-	}
 }
