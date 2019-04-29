@@ -3,6 +3,7 @@ package connect
 import (
 	"bytes"
 	"chat_group/src/log"
+	"github.com/sirupsen/logrus"
 	"net"
 	"sync"
 )
@@ -15,6 +16,7 @@ type Connection struct {
 	SendMessageChan chan []byte
 	RetryTimes      uint32
 	Buffer          *bytes.Buffer
+	Log             *logrus.Entry
 	sync.RWMutex
 }
 
@@ -25,6 +27,7 @@ func NewConnection(conn net.Conn) *Connection {
 		SendMessageChan: make(chan []byte, SendMessageChanBuffer),
 		RetryTimes:      0,
 		Buffer:          &bytes.Buffer{},
+		Log:             logrus.WithFields(logrus.Fields{"Origin": "Connection-" + conn.RemoteAddr().String()}),
 	}
 }
 

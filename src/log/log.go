@@ -4,36 +4,40 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var entry *logrus.Entry
+
 func init() {
-	//logrus.SetReportCaller(false)
-	//logrus.SetOutput(os.Stdout)
-	//logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp:   false,
+		TimestampFormat: "2006-01-02 15:04:05.00",
+	})
+	entry = logrus.WithFields(logrus.Fields{"Origin": "System Log"})
 }
 
 func Info(v ...interface{}) {
-	logrus.Info(v...)
+	entry.Info(v...)
 }
 
 func Infof(format string, v ...interface{}) {
-	logrus.Infof(format, v...)
+	entry.Infof(format, v...)
 }
 
 func Error(v ...interface{}) {
-	logrus.Error(v)
+	entry.Error(v)
 }
 
 func Errorf(format string, v ...interface{}) {
-	logrus.Errorf(format, v...)
+	entry.Errorf(format, v...)
 }
 
 func Debug(v ...interface{}) {
-	logrus.Debug(v)
+	entry.Debug(v)
 }
 
 func Debugf(format string, v ...interface{}) {
-	logrus.Debugf(format, v...)
+	entry.Debugf(format, v...)
 }
 
 func Panic(v ...interface{}) {
-	logrus.Panic(v...)
+	entry.Panic(v...)
 }
