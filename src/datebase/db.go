@@ -3,7 +3,7 @@ package datebase
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	log "github.com/sirupsen/logrus"
+	"log"
 )
 
 const NameOfDB = "chat_record.db"

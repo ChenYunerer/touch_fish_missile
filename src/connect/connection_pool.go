@@ -1,7 +1,7 @@
 package connect
 
 import (
-	log "github.com/sirupsen/logrus"
+	"chat_group/src/log"
 	"sync"
 	"time"
 )

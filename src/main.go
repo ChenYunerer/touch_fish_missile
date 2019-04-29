@@ -2,17 +2,10 @@ package main
 
 import (
 	"chat_group/src/datebase"
-	log "github.com/sirupsen/logrus"
+	"chat_group/src/log"
 	"os"
 	"os/signal"
 )
-
-func init() {
-	log.SetFormatter(&log.TextFormatter{
-		DisableColors: false,
-		FullTimestamp: true,
-	})
-}
 
 func main() {
 	db := datebase.InitDB()

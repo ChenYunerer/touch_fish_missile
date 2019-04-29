@@ -2,7 +2,7 @@ package conn_msg
 
 import (
 	"chat_group/src/connect"
-	log "github.com/sirupsen/logrus"
+	"chat_group/src/log"
 	"reflect"
 )
 

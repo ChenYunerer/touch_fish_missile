@@ -2,7 +2,7 @@ package connect
 
 import (
 	"bytes"
-	log "github.com/sirupsen/logrus"
+	"chat_group/src/log"
 	"net"
 	"sync"
 )
