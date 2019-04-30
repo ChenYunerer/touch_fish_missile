@@ -3,14 +3,14 @@ package config
 import "time"
 
 type Config struct {
-	Network        string
-	Ip             string
-	Port           string
-	WriteTimeout   time.Duration
-	ReadTimeout    time.Duration
-	RetryTimes     uint32
-	PingDuration   time.Duration
-	SaveChatRecord bool
+	Network        string        //网络类型
+	Ip             string        //监听地址
+	Port           string        //监听端口
+	WriteTimeout   time.Duration //写入超时时间
+	ReadTimeout    time.Duration //读取超时时间
+	RetryTimes     uint32        //重试次数
+	PingDuration   time.Duration //心跳间隔
+	SaveChatRecord bool          //是否保存聊天记录
 }
 
 var config *Config
@@ -24,7 +24,7 @@ func initConfig() {
 		ReadTimeout:    time.Duration(5) * time.Second,
 		RetryTimes:     3,
 		PingDuration:   time.Duration(2) * time.Second,
-		SaveChatRecord: true,
+		SaveChatRecord: false,
 	}
 }
 
