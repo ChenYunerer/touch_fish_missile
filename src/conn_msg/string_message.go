@@ -16,7 +16,7 @@ type StringMessage struct {
 	Message string
 }
 
-func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
+func (msg *StringMessage) ServerHandleMessage(conn *connect.Connection) error {
 	t := reflect.TypeOf(msg).Elem()
 	messageId := MessageTypeIdMap[t]
 	stringMessageBytes, err := serialization.EncodeMessage(msg, messageId[:])
@@ -36,6 +36,10 @@ func (msg *StringMessage) HandleMessage(conn *connect.Connection) error {
 			}
 		})
 	}
+	return nil
+}
+
+func (msg *StringMessage) ClientHandleMessage(conn *connect.Connection) error {
 	return nil
 }
 

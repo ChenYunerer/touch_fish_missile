@@ -6,8 +6,12 @@ type PongMessage struct {
 	Content MessageContent
 }
 
-func (msg *PongMessage) HandleMessage(conn *connect.Connection) error {
+func (msg *PongMessage) ServerHandleMessage(conn *connect.Connection) error {
 	conn.ResetRetryTimes()
+	return nil
+}
+
+func (msg *PongMessage) ClientHandleMessage(conn *connect.Connection) error {
 	return nil
 }
 

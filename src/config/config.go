@@ -1,6 +1,9 @@
 package config
 
-import "time"
+import (
+	"os"
+	"time"
+)
 
 type Config struct {
 	Network        string        //网络类型
@@ -25,6 +28,15 @@ func initConfig() {
 		RetryTimes:     3,
 		PingDuration:   time.Duration(2) * time.Second,
 		SaveChatRecord: false,
+	}
+	//Ip Port 支持环境变量配置
+	ip := os.Getenv("ip")
+	if ip != "" {
+		config.Ip = ip
+	}
+	port := os.Getenv("port")
+	if port != "" {
+		config.Port = port
 	}
 }
 

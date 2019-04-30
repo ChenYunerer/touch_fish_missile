@@ -10,7 +10,7 @@ type PingMessage struct {
 	Content MessageContent
 }
 
-func (msg *PingMessage) HandleMessage(conn *connect.Connection) error {
+func (msg *PingMessage) ServerHandleMessage(conn *connect.Connection) error {
 	pongMessage := NewPongMessage()
 	t := reflect.TypeOf(pongMessage)
 	messageId := MessageTypeIdMap[t]
@@ -19,6 +19,10 @@ func (msg *PingMessage) HandleMessage(conn *connect.Connection) error {
 		return err
 	}
 	conn.SendMessageChan <- pongMessageBytes
+	return nil
+}
+
+func (msg *PingMessage) ClientHandleMessage(conn *connect.Connection) error {
 	return nil
 }
 

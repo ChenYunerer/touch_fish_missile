@@ -15,7 +15,8 @@ type MessageContent struct {
 }
 
 type Message interface {
-	HandleMessage(conn *connect.Connection) error
+	ServerHandleMessage(conn *connect.Connection) error
+	ClientHandleMessage(conn *connect.Connection) error
 }
 
 var MessageMap map[string]interface{}

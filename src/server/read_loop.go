@@ -53,7 +53,7 @@ func readLoop(conn *connect.Connection) {
 		}
 		for _, message := range messages {
 			log.Info("receive conn_msg from client ", message)
-			err = message.HandleMessage(conn)
+			err = message.ServerHandleMessage(conn)
 			if err != nil {
 				log.Error(err)
 			}
