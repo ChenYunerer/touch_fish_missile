@@ -2,7 +2,8 @@
 #测试脚本
 echo "编译开始"
 filename="main"
-go build -o $filename ./src/main/
+os="darwin"
+./build.sh $filename $os
 echo "编译完成"
 echo "启动Server"
 ./$filename -startType server > ./output/server.log 2>&1 &
