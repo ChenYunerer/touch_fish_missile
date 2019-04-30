@@ -5,10 +5,10 @@ filename="main"
 os="darwin"
 ./build.sh $filename $os
 echo "编译完成"
-echo "启动Server"
-./$filename -startType server > ./output/server.log 2>&1 &
 echo "输入Client数量"
 read numOfClient
+echo "启动Server"
+./$filename -startType server > ./output/server.log 2>&1 &
 num=0
 while ((num < numOfClient))
 do
