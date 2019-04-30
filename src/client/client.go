@@ -9,7 +9,10 @@ import (
 	"time"
 )
 
-func StartClient() {
+var token string
+
+func StartClient(t string) {
+	token = t
 	go connectToServer()
 }
 
@@ -39,7 +42,7 @@ func handleConn(conn net.Conn) {
 	go func() {
 		defer log.Info("WriteLoop Over")
 		defer wg.Done()
-		writeLoop(connection, quit)
+		writeLoop(connection, token, quit)
 	}()
 	wg.Wait()
 }

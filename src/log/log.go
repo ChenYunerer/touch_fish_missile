@@ -11,6 +11,7 @@ func init() {
 		FullTimestamp:   false,
 		TimestampFormat: "2006-01-02 15:04:05.00",
 	})
+	//logrus.SetOutput(os.Stdout)
 	entry = logrus.WithFields(logrus.Fields{"Origin": "System Log"})
 }
 

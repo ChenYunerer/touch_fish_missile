@@ -2,13 +2,17 @@ package client
 
 import (
 	"chat_group/src/config"
+	"chat_group/src/conn_msg"
 	"chat_group/src/connect"
 	"chat_group/src/log"
+	"chat_group/src/serialization"
+	"reflect"
 	"time"
 )
 
-func writeLoop(conn *connect.Connection, quit chan struct{}) {
+func writeLoop(conn *connect.Connection, token string, quit chan struct{}) {
 	conf := config.GetInstance()
+	t := time.NewTicker(time.Duration(1) * time.Second)
 	for {
 		if conf.WriteTimeout.Seconds() != 0 {
 			deadline := time.Now().Add(conf.WriteTimeout)
@@ -39,6 +43,16 @@ func writeLoop(conn *connect.Connection, quit chan struct{}) {
 				log.Error("Send Data Error")
 				return
 			}
+		case <-t.C:
+			stringMessage := conn_msg.NewStringMessage(token, "golang大法好")
+			t := reflect.TypeOf(stringMessage)
+			messageId := conn_msg.MessageTypeIdMap[t]
+			bytes, err := serialization.EncodeMessage(&stringMessage, messageId[:])
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+			conn.SendMessageChan <- bytes
 		case <-quit:
 			return
 		}
