@@ -14,11 +14,13 @@ import (
 var serverMode bool
 var token string
 var logLevel string
+var groupTag string
 
 func cmd() {
 	flag.BoolVar(&serverMode, "s", false, "start with server mode or client mode; true clientMode false serverMode")
 	flag.StringVar(&token, "token", "unknown", "client token")
 	flag.StringVar(&logLevel, "logLevel", "error", "log level: panic fatal error warn info debug trace")
+	flag.StringVar(&groupTag, "groupTag", "default", "log level: panic fatal error warn info debug trace")
 	flag.Parse()
 }
 

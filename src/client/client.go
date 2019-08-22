@@ -14,9 +14,11 @@ import (
 )
 
 var token string
+var groupTag string
 
-func StartClient(t string) {
+func StartClient(t string, gt string) {
 	token = t
+	groupTag = gt
 	go connectToServer()
 }
 
