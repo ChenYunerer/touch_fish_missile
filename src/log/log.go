@@ -1,16 +1,23 @@
 package log
 
 import (
+	"chat_group/src/config"
 	"github.com/sirupsen/logrus"
 )
 
 var entry *logrus.Entry
 
-func init() {
+func Init() {
+	conf := config.GetInstance()
 	logrus.SetFormatter(&logrus.TextFormatter{
 		FullTimestamp:   false,
 		TimestampFormat: "2006-01-02 15:04:05.00",
 	})
+	logLevel, err := logrus.ParseLevel(conf.LogLevel)
+	if err != nil {
+		panic(err)
+	}
+	logrus.SetLevel(logLevel)
 	//logrus.SetOutput(os.Stdout)
 	entry = logrus.WithFields(logrus.Fields{"Origin": "System Log"})
 }

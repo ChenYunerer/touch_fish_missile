@@ -14,11 +14,11 @@ func StartServer() {
 
 func listenerConn() {
 	conf := config.GetInstance()
-	listener, err := net.Listen(conf.Network, conf.GetAddress())
+	listener, err := net.Listen(conf.Network, conf.GetListenAddress())
 	if err != nil {
 		log.Error(err)
 	}
-	log.Info("Listen Start At: ", conf.GetAddress())
+	log.Info("Listen Start At: ", conf.GetListenAddress())
 	defer listener.Close()
 	for {
 		conn, err := listener.Accept()

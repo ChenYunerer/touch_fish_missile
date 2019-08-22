@@ -11,40 +11,31 @@ import (
 	"os/signal"
 )
 
-var startType string
+var serverMode bool
 var token string
-
-var serverMode = true
+var logLevel string
 
 func cmd() {
-	flag.StringVar(&startType, "startType", "server", "start with server mode or client mode")
+	flag.BoolVar(&serverMode, "s", false, "start with server mode or client mode; true clientMode false serverMode")
 	flag.StringVar(&token, "token", "unknown", "client token")
+	flag.StringVar(&logLevel, "logLevel", "error", "log level: panic fatal error warn info debug trace")
 	flag.Parse()
-	switch startType {
-	case "server":
-		log.Info("Now Start With Server Mode")
-		serverMode = true
-		break
-	case "client":
-		log.Info("Now Start With Client Mode")
-		log.Info("Client Token is ", token)
-		serverMode = false
-		break
-	default:
-		panic("Parameter Error")
-	}
 }
 
 func main() {
 	cmd()
 	conf := config.GetInstance()
+	conf.LogLevel = logLevel
+	log.Init()
 	if conf.SaveChatRecord {
 		db := datebase.InitDB()
 		defer db.Close()
 	}
 	if serverMode {
+		log.Info("Now Start With Server Mode")
 		server.StartServer()
 	} else {
+		log.Info("Now Start With Client Mode")
 		client.StartClient(token)
 	}
 	c := make(chan os.Signal, 1)
