@@ -49,6 +49,7 @@ func handleConn(conn net.Conn) {
 		defer wg.Done()
 		writeLoop(connection, token, quit)
 	}()
+	//send introduce message for connection initialization
 	sendIntroduceMessage(connection)
 	go listenCmd(connection)
 	wg.Wait()

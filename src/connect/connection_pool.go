@@ -94,4 +94,5 @@ func (connPool *ConnectionPool) PrepareSendToOther(object SendToOtherChanObject)
 
 func (connPool *ConnectionPool) SearchConnectionsByGroup(group string) []Connection {
 	//todo
+	return nil
 }
