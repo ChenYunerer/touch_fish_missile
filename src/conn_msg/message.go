@@ -29,6 +29,7 @@ func init() {
 	MessageMap["PONG"] = PongMessage{}
 	MessageMap["STRI"] = StringMessage{}
 	MessageMap["INTR"] = IntroduceMessage{}
+	MessageMap["GROU"] = GroupInfoMessage{}
 
 	MessageIdTypeMap = make(map[MessageId]reflect.Type)
 	MessageTypeIdMap = make(map[reflect.Type]MessageId)
