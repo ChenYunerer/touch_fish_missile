@@ -6,7 +6,6 @@ import (
 	"chat_group/src/connect"
 	"chat_group/src/log"
 	"chat_group/src/serialization"
-	"fmt"
 	"net"
 	"reflect"
 	"sync"
@@ -55,10 +54,8 @@ func handleConn(conn net.Conn) {
 	wg.Wait()
 }
 
-var cmdInputStr string
-
 func sendIntroduceMessage(conn *connect.Connection) {
-	introduceMessage := conn_msg.NewIntroduceMessage(token, group)
+	introduceMessage := conn_msg.NewIntroduceMessage(token, group, "")
 	t := reflect.TypeOf(introduceMessage)
 	messageId := conn_msg.MessageTypeIdMap[t]
 	bytes, err := serialization.EncodeMessage(&introduceMessage, messageId[:])
@@ -66,23 +63,4 @@ func sendIntroduceMessage(conn *connect.Connection) {
 		log.Error(err)
 	}
 	conn.SendMessageChan <- bytes
-}
-
-func listenCmd(conn *connect.Connection) {
-	for {
-		num, err := fmt.Scanln(&cmdInputStr)
-		if num == 0 || err != nil {
-			log.Error("listenCmd err num: ", string(num), " err: ", err)
-			continue
-		}
-		stringMessage := conn_msg.NewStringMessage(token, cmdInputStr)
-		t := reflect.TypeOf(stringMessage)
-		messageId := conn_msg.MessageTypeIdMap[t]
-		bytes, err := serialization.EncodeMessage(&stringMessage, messageId[:])
-		if err != nil {
-			log.Error(err)
-			continue
-		}
-		conn.SendMessageChan <- bytes
-	}
 }

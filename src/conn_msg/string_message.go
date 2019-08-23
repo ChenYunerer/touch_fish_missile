@@ -5,7 +5,7 @@ import (
 	"chat_group/src/connect"
 	"chat_group/src/datebase"
 	"chat_group/src/serialization"
-	"fmt"
+	"chat_group/src/util"
 	"github.com/prometheus/common/log"
 	"reflect"
 	"time"
@@ -42,7 +42,7 @@ func (msg *StringMessage) ServerHandleMessage(conn *connect.Connection) error {
 
 func (msg *StringMessage) ClientHandleMessage(conn *connect.Connection) error {
 	//print msg into cmd line
-	fmt.Println(msg.Token, ": ", msg.Message)
+	util.PrintMsgToCmd(msg.Token, ": ", msg.Message)
 	return nil
 }
 

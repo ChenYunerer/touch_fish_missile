@@ -9,6 +9,7 @@ import (
 
 func writeLoop(conn *connect.Connection, token string, quit chan struct{}) {
 	conf := config.GetInstance()
+	//test: send test message per second
 	t := time.NewTicker(time.Duration(1) * time.Second)
 	for {
 		if conf.WriteTimeout.Seconds() != 0 {

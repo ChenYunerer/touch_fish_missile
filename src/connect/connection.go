@@ -64,5 +64,5 @@ func (conn *Connection) Close() {
 	if err != nil {
 		log.Error(err)
 	}
-	log.Info("conn ", conn.RemoteAddress, " 结束")
+	log.Info("conn ", conn.RemoteAddress, " closed")
 }

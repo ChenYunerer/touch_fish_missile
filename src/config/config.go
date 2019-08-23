@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	//system config
 	Network        string        //网络类型
 	ListenIp       string        //监听地址
 	ServerIp       string        //服务端地址
@@ -16,6 +17,8 @@ type Config struct {
 	PingDuration   time.Duration //心跳间隔
 	SaveChatRecord bool          //是否保存聊天记录
 	LogLevel       string        //日志打印等级
+	//user config
+	//....
 }
 
 var config *Config
@@ -33,10 +36,14 @@ func initConfig() {
 		SaveChatRecord: false,
 		LogLevel:       "INFO",
 	}
-	//ListenIp Port 支持环境变量配置
-	ip := os.Getenv("ip")
-	if ip != "" {
-		config.ListenIp = ip
+	//ListenIp Port support system env
+	listenIp := os.Getenv("listenIp")
+	if listenIp != "" {
+		config.ListenIp = listenIp
+	}
+	serverIp := os.Getenv("serverIp")
+	if serverIp != "" {
+		config.ServerIp = serverIp
 	}
 	port := os.Getenv("port")
 	if port != "" {

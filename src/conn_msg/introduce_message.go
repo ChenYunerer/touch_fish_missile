@@ -2,28 +2,44 @@ package conn_msg
 
 import (
 	"chat_group/src/connect"
+	"chat_group/src/log"
+	"chat_group/src/serialization"
+	"chat_group/src/util"
+	"reflect"
 )
 
 type IntroduceMessage struct {
 	Token   string
-	Content MessageContent
 	Group   string
+	Message string
+	Content MessageContent
 }
 
 func (msg *IntroduceMessage) ServerHandleMessage(conn *connect.Connection) error {
-	conn.ConnectionUserInfo.Token = msg.Token
-	conn.ConnectionUserInfo.Group = msg.Group
+	conn.Token = msg.Token
+	conn.Group = msg.Group
+	returnMsg := "user: " + conn.Token + " has entered the " + conn.Group + " group"
+	introduceMessage := NewIntroduceMessage("", "", returnMsg)
+	t := reflect.TypeOf(introduceMessage)
+	messageId := MessageTypeIdMap[t]
+	bytes, err := serialization.EncodeMessage(&introduceMessage, messageId[:])
+	if err != nil {
+		log.Error(err)
+	}
+	conn.SendMessageChan <- bytes
 	return nil
 }
 
 func (msg *IntroduceMessage) ClientHandleMessage(conn *connect.Connection) error {
+	util.PrintSysNotifyToCmd(msg.Message)
 	return nil
 }
 
-func NewIntroduceMessage(token, group string) IntroduceMessage {
+func NewIntroduceMessage(token, group, message string) IntroduceMessage {
 	return IntroduceMessage{
 		Token:   token,
 		Group:   group,
+		Message: message,
 		Content: MessageContent{MessageType: "INTR"},
 	}
 }

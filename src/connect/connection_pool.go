@@ -3,6 +3,7 @@ package connect
 import (
 	"chat_group/src/config"
 	"chat_group/src/log"
+	"strings"
 	"sync"
 	"time"
 )
@@ -53,6 +54,9 @@ func (connPool *ConnectionPool) sendToOthers(object SendToOtherChanObject) {
 	conf := config.GetInstance()
 	timeOut := time.NewTicker(conf.WriteTimeout)
 	for remountAddress, conn := range connPool.connections {
+		if !strings.EqualFold(conn.Group, object.conn.Group) {
+			continue
+		}
 		if remountAddress != object.conn.RemoteAddress {
 			select {
 			case conn.SendMessageChan <- object.data:
@@ -86,4 +90,8 @@ func (connPool *ConnectionPool) RemoveConnection(conn *Connection) {
 
 func (connPool *ConnectionPool) PrepareSendToOther(object SendToOtherChanObject) {
 	connPool.SendToOtherChan <- object
+}
+
+func (connPool *ConnectionPool) SearchConnectionsByGroup(group string) []Connection {
+	//todo
 }
