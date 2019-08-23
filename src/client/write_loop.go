@@ -1,10 +1,10 @@
 package client
 
 import (
-	"chat_group/src/config"
-	"chat_group/src/connect"
-	"chat_group/src/log"
 	"time"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
 )
 
 func writeLoop(conn *connect.Connection, token string, quit chan struct{}) {

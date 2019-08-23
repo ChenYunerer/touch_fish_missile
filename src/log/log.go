@@ -1,8 +1,8 @@
 package log
 
 import (
-	"chat_group/src/config"
 	"github.com/sirupsen/logrus"
+	"touch_fish_missile/src/config"
 )
 
 var entry *logrus.Entry

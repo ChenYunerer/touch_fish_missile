@@ -1,0 +1,97 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "KmjnydoAbofMieIWm+it5OWERaM=",
+			"path": "github.com/alecthomas/template",
+			"revision": "a0175ee3bccc567396460bf5acd36800cb10c49c",
+			"revisionTime": "2016-04-05T07:15:01Z"
+		},
+		{
+			"checksumSHA1": "3wt0pTXXeS+S93unwhGoLIyGX/Q=",
+			"path": "github.com/alecthomas/template/parse",
+			"revision": "a0175ee3bccc567396460bf5acd36800cb10c49c",
+			"revisionTime": "2016-04-05T07:15:01Z"
+		},
+		{
+			"checksumSHA1": "fCc3grA7vIxfBru7R3SqjcW+oLI=",
+			"path": "github.com/alecthomas/units",
+			"revision": "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a",
+			"revisionTime": "2015-10-22T06:55:26Z"
+		},
+		{
+			"checksumSHA1": "7PNL0WPSWAV0RgtXDVnMtu3uMjo=",
+			"path": "github.com/jinzhu/gorm",
+			"revision": "b7156195f7f3415f97c20abbd6aff894b847fee8",
+			"revisionTime": "2019-05-08T07:12:19Z"
+		},
+		{
+			"checksumSHA1": "4VZ1gLZHMumRjV3fclS1aX8S1aQ=",
+			"path": "github.com/jinzhu/gorm/dialects/sqlite",
+			"revision": "b7156195f7f3415f97c20abbd6aff894b847fee8",
+			"revisionTime": "2019-05-08T07:12:19Z"
+		},
+		{
+			"checksumSHA1": "4eelJOSLZoDzLuaJvgilOBVNovU=",
+			"path": "github.com/jinzhu/inflection",
+			"revision": "04140366298a54a039076d798123ffa108fff46c",
+			"revisionTime": "2018-03-08T03:36:59Z"
+		},
+		{
+			"checksumSHA1": "Z7rkupTQRAZzzTCqDLiSbNR70to=",
+			"path": "github.com/konsorten/go-windows-terminal-sequences",
+			"revision": "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e",
+			"revisionTime": "2019-02-26T22:47:05Z"
+		},
+		{
+			"checksumSHA1": "9F3XFbc79zcVjz2mvv3PFjLLMy4=",
+			"path": "github.com/mattn/go-sqlite3",
+			"revision": "5994cc52dfa89a4ee21ac891b06fbc1ea02c52d3",
+			"revisionTime": "2019-04-24T09:37:27Z"
+		},
+		{
+			"checksumSHA1": "MGnqHnmEqc1fjnYiWReSiW8C27A=",
+			"path": "github.com/prometheus/common/log",
+			"revision": "17f5ca1748182ddf24fc33a5a7caaaf790a52fcc",
+			"revisionTime": "2019-05-16T16:00:40Z"
+		},
+		{
+			"checksumSHA1": "3EH6WFZ6eet+L973ovo471d8tEc=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "5521996833c095f5ac75d99687cef8ad344ded12",
+			"revisionTime": "2019-04-23T09:34:05Z"
+		},
+		{
+			"checksumSHA1": "vlLwSHSO2AtEVMOHadn6sznEzdk=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a43fa875dd822b81eb6d2ad538bc1f4caba169bd",
+			"revisionTime": "2019-05-02T15:41:39Z"
+		},
+		{
+			"checksumSHA1": "rcBKlPwijxijQ6qDBzm2ShZUSzE=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "a43fa875dd822b81eb6d2ad538bc1f4caba169bd",
+			"revisionTime": "2019-05-02T15:41:39Z"
+		},
+		{
+			"checksumSHA1": "P9OIhD26uWlIST/me4TYnvseCoY=",
+			"path": "golang.org/x/sys/windows/registry",
+			"revision": "a43fa875dd822b81eb6d2ad538bc1f4caba169bd",
+			"revisionTime": "2019-05-02T15:41:39Z"
+		},
+		{
+			"checksumSHA1": "uVlUSSKplihZG7N+QJ6fzDZ4Kh8=",
+			"path": "golang.org/x/sys/windows/svc/eventlog",
+			"revision": "a43fa875dd822b81eb6d2ad538bc1f4caba169bd",
+			"revisionTime": "2019-05-02T15:41:39Z"
+		},
+		{
+			"checksumSHA1": "sToCp8GThnMnsBzsHv+L/tBYQrQ=",
+			"path": "gopkg.in/alecthomas/kingpin.v2",
+			"revision": "947dcec5ba9c011838740e680966fd7087a71d0d",
+			"revisionTime": "2017-12-17T18:08:21Z"
+		}
+	],
+	"rootPath": "touch_fish_missile"
+}

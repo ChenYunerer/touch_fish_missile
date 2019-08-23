@@ -2,9 +2,9 @@ package conn_msg
 
 import (
 	"bytes"
-	"chat_group/src/log"
-	"chat_group/src/serialization"
 	"errors"
+	"touch_fish_missile/src/log"
+	"touch_fish_missile/src/serialization"
 )
 
 func DecodeData(buf *bytes.Buffer) ([][]byte, error) {

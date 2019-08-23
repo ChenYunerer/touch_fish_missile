@@ -1,12 +1,12 @@
 package client
 
 import (
-	"chat_group/src/conn_msg"
-	"chat_group/src/connect"
-	"chat_group/src/log"
-	"chat_group/src/serialization"
 	"fmt"
 	"reflect"
+	"touch_fish_missile/src/conn_msg"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
+	"touch_fish_missile/src/serialization"
 )
 
 var cmdInputStr string

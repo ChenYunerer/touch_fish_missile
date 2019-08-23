@@ -1,15 +1,15 @@
 package client
 
 import (
-	"chat_group/src/config"
-	"chat_group/src/conn_msg"
-	"chat_group/src/connect"
-	"chat_group/src/log"
-	"chat_group/src/serialization"
 	"net"
 	"reflect"
 	"sync"
 	"time"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/conn_msg"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
+	"touch_fish_missile/src/serialization"
 )
 
 var token string

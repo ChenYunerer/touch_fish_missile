@@ -1,9 +1,9 @@
 package conn_msg
 
 import (
-	"chat_group/src/connect"
-	"chat_group/src/log"
 	"reflect"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
 )
 
 const LenOfMessageID = 4

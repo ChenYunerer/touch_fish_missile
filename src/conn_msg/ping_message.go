@@ -1,9 +1,9 @@
 package conn_msg
 
 import (
-	"chat_group/src/connect"
-	"chat_group/src/serialization"
 	"reflect"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/serialization"
 )
 
 type PingMessage struct {

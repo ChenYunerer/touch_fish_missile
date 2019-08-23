@@ -1,14 +1,14 @@
 package main
 
 import (
-	"chat_group/src/client"
-	"chat_group/src/config"
-	"chat_group/src/datebase"
-	"chat_group/src/log"
-	"chat_group/src/server"
 	"flag"
 	"os"
 	"os/signal"
+	"touch_fish_missile/src/client"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/datebase"
+	"touch_fish_missile/src/log"
+	"touch_fish_missile/src/server"
 )
 
 var serverMode bool

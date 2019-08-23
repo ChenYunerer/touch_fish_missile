@@ -2,10 +2,10 @@ package connect
 
 import (
 	"bytes"
-	"chat_group/src/log"
 	"github.com/sirupsen/logrus"
 	"net"
 	"sync"
+	"touch_fish_missile/src/log"
 )
 
 const SendMessageChanBuffer = 64

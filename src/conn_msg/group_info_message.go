@@ -1,11 +1,11 @@
 package conn_msg
 
 import (
-	"chat_group/src/connect"
-	"chat_group/src/log"
-	"chat_group/src/serialization"
-	"chat_group/src/util"
 	"reflect"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
+	"touch_fish_missile/src/serialization"
+	"touch_fish_missile/src/util"
 )
 
 type GroupInfoMessage struct {

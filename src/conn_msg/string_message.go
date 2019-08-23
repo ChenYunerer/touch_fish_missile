@@ -1,14 +1,14 @@
 package conn_msg
 
 import (
-	"chat_group/src/config"
-	"chat_group/src/connect"
-	"chat_group/src/datebase"
-	"chat_group/src/serialization"
-	"chat_group/src/util"
 	"github.com/prometheus/common/log"
 	"reflect"
 	"time"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/datebase"
+	"touch_fish_missile/src/serialization"
+	"touch_fish_missile/src/util"
 )
 
 type StringMessage struct {

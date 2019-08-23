@@ -1,6 +1,6 @@
 package conn_msg
 
-import "chat_group/src/connect"
+import "touch_fish_missile/src/connect"
 
 type PongMessage struct {
 	Content MessageContent

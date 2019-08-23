@@ -1,11 +1,11 @@
 package server
 
 import (
-	"chat_group/src/config"
-	"chat_group/src/connect"
-	"chat_group/src/log"
 	"net"
 	"sync"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/connect"
+	"touch_fish_missile/src/log"
 )
 
 func StartServer() {

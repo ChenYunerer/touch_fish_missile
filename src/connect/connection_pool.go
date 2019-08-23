@@ -1,11 +1,11 @@
 package connect
 
 import (
-	"chat_group/src/config"
-	"chat_group/src/log"
 	"strings"
 	"sync"
 	"time"
+	"touch_fish_missile/src/config"
+	"touch_fish_missile/src/log"
 )
 
 type SendToOtherChanObject struct {
