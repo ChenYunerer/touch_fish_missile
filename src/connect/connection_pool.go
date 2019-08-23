@@ -1,6 +1,7 @@
 package connect
 
 import (
+	"chat_group/src/config"
 	"chat_group/src/log"
 	"sync"
 	"time"
@@ -49,7 +50,8 @@ func GetConnectionPoolInstant() *ConnectionPool {
 }
 
 func (connPool *ConnectionPool) sendToOthers(object SendToOtherChanObject) {
-	timeOut := time.NewTicker(time.Duration(1) * time.Second)
+	conf := config.GetInstance()
+	timeOut := time.NewTicker(conf.WriteTimeout)
 	for remountAddress, conn := range connPool.connections {
 		if remountAddress != object.conn.RemoteAddress {
 			select {
@@ -57,10 +59,10 @@ func (connPool *ConnectionPool) sendToOthers(object SendToOtherChanObject) {
 				break
 			case <-timeOut.C:
 				close(object.conn.SendMessageChan)
-				log.Info("超时 关闭连接")
+				log.Info("timeout, close connection")
 				break
 			default:
-				log.Info("信道已经被关闭")
+				log.Info("chan has bean closed")
 			}
 		}
 	}
@@ -69,7 +71,7 @@ func (connPool *ConnectionPool) sendToOthers(object SendToOtherChanObject) {
 func (connPool *ConnectionPool) AddConnection(conn *Connection) {
 	connPool.Mutex.Lock()
 	defer connPool.Mutex.Unlock()
-	log.Info(conn.RemoteAddress, " 加入连接池")
+	log.Info(conn.RemoteAddress, " add into connection pool")
 	connPool.connections[conn.RemoteAddress] = conn
 }
 
@@ -78,7 +80,7 @@ func (connPool *ConnectionPool) RemoveConnection(conn *Connection) {
 	connPool.Mutex.Lock()
 	defer connPool.Mutex.Unlock()
 	conn.Close()
-	log.Info(conn.RemoteAddress, " 从连接池移除")
+	log.Info(conn.RemoteAddress, " remove from connection poll")
 	delete(connPool.connections, conn.RemoteAddress)
 }
 

@@ -24,12 +24,12 @@ func (msg *StringMessage) ServerHandleMessage(conn *connect.Connection) error {
 	if err != nil {
 		return err
 	}
-	//广播消息
+	//broadcast message
 	sendToOtherChanObject := connect.NewSendToOtherChanObject(stringMessageBytes, conn)
 	connect.GetConnectionPoolInstant().PrepareSendToOther(sendToOtherChanObject)
 	if config.GetInstance().SaveChatRecord {
 		datebase.DO(func() {
-			//记录消息
+			//record message into db
 			chatRecordDO := datebase.NewChatRecordDO(msg.Token, conn.RemoteAddress, msg.Message, time.Now())
 			insertSuccess := chatRecordDO.Insert()
 			if !insertSuccess {
@@ -41,6 +41,7 @@ func (msg *StringMessage) ServerHandleMessage(conn *connect.Connection) error {
 }
 
 func (msg *StringMessage) ClientHandleMessage(conn *connect.Connection) error {
+	//print msg into cmd line
 	fmt.Println(msg.Token, ": ", msg.Message)
 	return nil
 }
@@ -48,7 +49,7 @@ func (msg *StringMessage) ClientHandleMessage(conn *connect.Connection) error {
 func NewStringMessage(token, message string) StringMessage {
 	return StringMessage{
 		Token:   token,
-		Content: MessageContent{MessageType: "STRING"},
+		Content: MessageContent{MessageType: "STRI"},
 		Message: message,
 	}
 }

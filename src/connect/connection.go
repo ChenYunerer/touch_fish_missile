@@ -10,6 +10,11 @@ import (
 
 const SendMessageChanBuffer = 64
 
+type ConnectionUserInfo struct {
+	Token string
+	Group string
+}
+
 type Connection struct {
 	RemoteAddress   string
 	Conn            net.Conn
@@ -17,6 +22,7 @@ type Connection struct {
 	RetryTimes      uint32
 	Buffer          *bytes.Buffer
 	Log             *logrus.Entry
+	ConnectionUserInfo
 	sync.RWMutex
 }
 

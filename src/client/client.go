@@ -14,11 +14,11 @@ import (
 )
 
 var token string
-var groupTag string
+var group string
 
-func StartClient(t string, gt string) {
+func StartClient(t string, g string) {
 	token = t
-	groupTag = gt
+	group = g
 	go connectToServer()
 }
 
@@ -50,11 +50,23 @@ func handleConn(conn net.Conn) {
 		defer wg.Done()
 		writeLoop(connection, token, quit)
 	}()
+	sendIntroduceMessage(connection)
 	go listenCmd(connection)
 	wg.Wait()
 }
 
 var cmdInputStr string
+
+func sendIntroduceMessage(conn *connect.Connection) {
+	introduceMessage := conn_msg.NewIntroduceMessage(token, group)
+	t := reflect.TypeOf(introduceMessage)
+	messageId := conn_msg.MessageTypeIdMap[t]
+	bytes, err := serialization.EncodeMessage(&introduceMessage, messageId[:])
+	if err != nil {
+		log.Error(err)
+	}
+	conn.SendMessageChan <- bytes
+}
 
 func listenCmd(conn *connect.Connection) {
 	for {
