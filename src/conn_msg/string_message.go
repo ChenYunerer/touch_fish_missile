@@ -42,7 +42,7 @@ func (msg *StringMessage) ServerHandleMessage(conn *connect.Connection) error {
 
 func (msg *StringMessage) ClientHandleMessage(conn *connect.Connection) error {
 	//print msg into cmd line
-	util.PrintMsgToCmd(msg.Token, ": ", msg.Message)
+	util.PrintMsgToCmd(time.Now().Format("2006-01-02 15:04:05"), msg.Token, ": ", msg.Message)
 	return nil
 }
 
