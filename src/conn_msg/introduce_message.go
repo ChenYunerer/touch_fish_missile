@@ -19,6 +19,12 @@ func (msg *IntroduceMessage) ServerHandleMessage(conn *connect.Connection) error
 	conn.Token = msg.Token
 	conn.Group = msg.Group
 	returnMsg := "user: " + conn.Token + " has entered the " + conn.Group + " group"
+	returnMsg = returnMsg + "\n"
+	returnMsg = returnMsg + "群组用户: "
+	groupConns := connect.GetConnectionPoolInstant().SearchConnectionsByGroup(msg.Group)
+	for _, groupConn := range groupConns {
+		returnMsg = returnMsg + groupConn.Token + " "
+	}
 	introduceMessage := NewIntroduceMessage("", "", returnMsg)
 	t := reflect.TypeOf(introduceMessage)
 	messageId := MessageTypeIdMap[t]

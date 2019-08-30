@@ -93,6 +93,11 @@ func (connPool *ConnectionPool) PrepareSendToOther(object SendToOtherChanObject)
 }
 
 func (connPool *ConnectionPool) SearchConnectionsByGroup(group string) []Connection {
-	//todo
-	return nil
+	searchConnections := make([]Connection, 0)
+	for _, conn := range connPool.connections {
+		if strings.EqualFold(conn.Group, group) {
+			searchConnections = append(searchConnections, *conn)
+		}
+	}
+	return searchConnections
 }
